@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 import sys
 import traceback
 import urllib
@@ -20,7 +21,7 @@ def fetch_last_data_file():
 
 def create_directory_and_unzip_file():
     if not os.path.exists(FULL_PATH_TO_SOURCE):
-        os.makedirs(DFULL_PATH_TO_SOURCE)
+        os.makedirs(FULL_PATH_TO_SOURCE)
     shutil.move(ZIP_FILE_NAME, FULL_PATH_TO_SOURCE + ZIP_FILE_NAME)
 
 if __name__ == '__main__':
