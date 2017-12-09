@@ -14,9 +14,10 @@ if __name__ == '__main__':
         ALL_COMPANY_DATA = prepare_data_for_analysis()
         for single_company in ALL_COMPANY_DATA:
             try:
-                print "SMA for " + get_company_name(single_company[0]) + " " + str(calculate_SMA(single_company, 15))
+                print "SMA for " + get_last_company_name(single_company) + " " + str(calculate_SMA(single_company, 15))
+                print get_last_company_close_price(single_company)
             except Exception as error:
-                print "Problem with calculation for company %s. Reason %s" % (get_company_name(single_company[0]), error)
+                print "Problem with calculation for company %s. Reason %s" % (get_last_company_name(single_company), error)
                 pass
 
     except Exception as err:
