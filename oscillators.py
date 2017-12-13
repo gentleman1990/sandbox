@@ -25,7 +25,7 @@ def calculate_EMA(array_company, days):
 def calculate_average_volume(array_company):
     volume = 0
     for single_day in range(0, len(array_company), 1):
-        volume += get_company_volume(array_company)
+        volume += get_company_volume(array_company[single_day])
     return volume/len(array_company)
 
 
@@ -33,5 +33,5 @@ def calculate_average_volume_period(array_company, days):
     reversed_array = get_reverse_array(array_company)
     volume = 0
     for single_day in range(0, days, 1):
-        volume += get_company_volume(reversed_array)
+        volume += get_company_volume(reversed_array[single_day])
     return volume/days
