@@ -8,8 +8,7 @@ def calculate_SMA(array_company, days):
     close_price = 0
     for single_day in range(0, days, 1):
         close_price += get_company_close_price(reversed_array[single_day])
-    return close_price / days
-
+    return round(close_price / days, 2)
 
 
 def calculate_EMA(array_company, days):
@@ -22,13 +21,13 @@ def prepare_EMA_array(array_company, days):
     index = days - 1
     for single_day in range(index, len(array_company), 1):
         close_price = get_company_close_price(array_company[single_day])
-        multiplier = 2/float(index)
+        multiplier = round(2/float(index), 2)
         if single_day == index:
             ema_array[index] = calculate_SMA(array_company, days)
             continue
         else:
             ema_day_before = ema_array[single_day - 1]
-        ema_array[single_day] = (close_price - ema_day_before)*multiplier + ema_day_before
+        ema_array[single_day] = round((close_price - ema_day_before)*multiplier + ema_day_before, 2)
     return ema_array
 
 
