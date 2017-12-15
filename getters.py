@@ -63,4 +63,4 @@ def get_last_company_close_price(single_company_row):
 
 
 def get_last_company_volume(single_company_row):
-    return int(single_company_row[len(single_company_row)][6])
+    return int(single_company_row[len(single_company_row)-1][6])
