@@ -44,3 +44,18 @@ def calculate_average_volume_period(array_company, days):
     for single_day in range(0, days, 1):
         volume += get_company_volume(reversed_array[single_day])
     return volume / days
+
+
+def check_upper_trending_period(array_company, days):
+    reversed_array = get_reverse_array(array_company)
+    close_price_now = get_company_close_price(reversed_array[0])
+    close_price_middle_past = get_company_close_price(reversed_array[days/2])
+    close_price_past = get_company_close_price(reversed_array[days])
+    if close_price_past < close_price_middle_past < close_price_now:
+        return True
+    else:
+        return False
+
+
+
+

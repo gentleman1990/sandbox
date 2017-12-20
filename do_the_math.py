@@ -10,10 +10,23 @@ FILTERED_COMPANY_DATA = []
 SMA30 = {}
 EMA15 = {}
 AVG_VOLUME = {}
+UPPER_TRENDING = []
 TYPED_COMPANIES = []
 
 
-def type_company_to_invest():
+def calculate_oscillators():
+    for single_company in ALL_COMPANY_DATA:
+        try:
+            SMA30[get_last_company_name(single_company)] = calculate_SMA(single_company, 30)
+            EMA15[get_last_company_name(single_company)] = calculate_EMA(single_company, 15)
+            AVG_VOLUME[get_last_company_name(single_company)] = calculate_average_volume_period(single_company, 200)
+            FILTERED_COMPANY_DATA.append(single_company)
+        except Exception as error:
+            print "Problem with calculation for company %s. Reason %s" % (get_last_company_name(single_company), error)
+            pass
+
+
+def type_company_to_invest_by_oscillators():
     for sc in FILTERED_COMPANY_DATA:
         company_name = get_last_company_name(sc)
         sma30 = SMA30[company_name]
@@ -24,22 +37,20 @@ def type_company_to_invest():
             print "Potentially company for investment: " + company_name
 
 
+def type_company_to_invest_by_trending():
+    for sc in FILTERED_COMPANY_DATA:
+        if check_upper_trending_period(sc, 200):
+            UPPER_TRENDING.append(get_last_company_name(sc))
+            print "Company with upper trending: " + get_last_company_name(sc)
+
 if __name__ == '__main__':
     try:
         ALL_COMPANY_DATA = prepare_data_for_analysis()
         print "Starting calculation for osillators ..."
-        for single_company in ALL_COMPANY_DATA:
-            try:
-                SMA30[get_last_company_name(single_company)] = calculate_SMA(single_company, 30)
-                EMA15[get_last_company_name(single_company)] = calculate_EMA(single_company, 15)
-                AVG_VOLUME[get_last_company_name(single_company)] = calculate_average_volume_period(single_company, 200)
-                FILTERED_COMPANY_DATA.append(single_company)
-            except Exception as error:
-                print "Problem with calculation for company %s. Reason %s" % (get_last_company_name(single_company), error)
-                pass
-
+        calculate_oscillators()
         print "The calculations for oscillators has been completed\nStarting typing ..."
-        type_company_to_invest()
+        type_company_to_invest_by_oscillators()
+        type_company_to_invest_by_trending()
         print "Typing has been completed"
     except Exception as err:
         print("Failed to execute plugin. Reason: %s" % err)

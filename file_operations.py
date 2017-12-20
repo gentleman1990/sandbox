@@ -5,6 +5,7 @@ import shutil
 import os
 import zipfile
 import time
+from getters import get_last_company_name
 
 URL_FOR_STOCK_QUOTES = "http://bossa.pl/pub/ciagle/omega/"
 ZIP_FILE_NAME = "omegacgl.zip"
@@ -40,17 +41,30 @@ def parse_stock_exchange_data():
     print "Parsing and preparing data please wait ..."
     for filename in os.listdir(FULL_PATH_TO_SOURCE):
         with open(FULL_PATH_TO_SOURCE + filename, "r") as single_file:
-            SINGLE_COMPANY_ARRAY = []
+            single_company_array = []
             for line in single_file:
                 single_row = [x.strip() for x in line.split(',')]
 
-                if(single_row[0] != "Name"):
-                    SINGLE_COMPANY_ARRAY.append(single_row)
+                if single_row[0] != "Name":
+                    single_company_array.append(single_row)
 
-            all_company_data.append(SINGLE_COMPANY_ARRAY)
+            all_company_data.append(single_company_array)
     print "Parsing and preparing data finished - it takes " + "{0:.2f}".format(float(time.time() - start_time)) + " seconds"
-    return all_company_data
+    filtered = remove_uncorrected_companies(all_company_data)
+    return filtered
 
+
+def remove_uncorrected_companies(all_company_data):
+    filtered_all_company_data = []
+    for single_company in all_company_data:
+        company_name = get_last_company_name(single_company)
+        if not(company_name.startswith("INT") \
+                or company_name.startswith("RC") or company_name.startswith("UCEX") \
+                or company_name.startswith("BPH") or company_name.startswith("DB")
+               or company_name.startswith("WIG") or company_name.startswith("KBC")
+               or company_name.startswith("TRIG")):
+            filtered_all_company_data.append(single_company)
+    return filtered_all_company_data
 
 def prepare_data_for_analysis():
     #fetch_last_data_file()
