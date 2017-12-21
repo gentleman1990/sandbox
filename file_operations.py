@@ -10,7 +10,7 @@ from getters import get_last_company_name
 URL_FOR_STOCK_QUOTES = "http://bossa.pl/pub/ciagle/omega/"
 ZIP_FILE_NAME = "omegacgl.zip"
 FULL_PATH_TO_SOURCE = os.path.dirname(os.path.realpath(__file__)) + "/source/"
-
+FULL_PATH_TO_LOG = os.path.dirname(os.path.realpath(__file__)) + "/logs/"
 
 def fetch_last_data_file():
     print "Fetching data ..."
@@ -33,6 +33,9 @@ def create_directory_and_unzip_file():
     shutil.move(ZIP_FILE_NAME, FULL_PATH_TO_SOURCE + ZIP_FILE_NAME)
     unzip()
     os.remove(FULL_PATH_TO_SOURCE + ZIP_FILE_NAME)
+
+    if not os.path.exists(FULL_PATH_TO_LOG):
+        os.makedirs(FULL_PATH_TO_LOG)
 
 
 def parse_stock_exchange_data():
@@ -62,7 +65,7 @@ def remove_uncorrected_companies(all_company_data):
                 or company_name.startswith("RC") or company_name.startswith("UCEX") \
                 or company_name.startswith("BPH") or company_name.startswith("DB")
                or company_name.startswith("WIG") or company_name.startswith("KBC")
-               or company_name.startswith("TRIG")):
+               or company_name.startswith("TRIG") or company_name.startswith("ETF")):
             filtered_all_company_data.append(single_company)
     return filtered_all_company_data
 
