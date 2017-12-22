@@ -12,15 +12,23 @@ TYPED_COMPANIES = []
 def buy(company_name, how_many, wallet):
     close_price_from_file = get_close_price_from_file(company_name)
     if not wallet:
-        wallet.append([company_name, close_price_from_file * how_many])
+        wallet.append([company_name, how_many, close_price_from_file * how_many])
+        print "Shares for company %s bought in value %s" % (company_name, str(how_many))
     elif already_in_wallet(company_name, wallet):
         print "Company already in wallet - you can't buy more"
     else:
-        wallet.append([company_name, close_price_from_file * how_many])
+        wallet.append([company_name, how_many, close_price_from_file * how_many])
+        print "Shares for company %s bought in value %s" % (company_name, str(how_many))
 
 
 def sell(company_name, how_many, wallet):
-    get_close_price_from_file(company_name)
+    for single_company in wallet:
+        if single_company[0] == company_name:
+            single_company[1] = single_company[1] - how_many
+            print "Shares for company %s sold in value %s" % (company_name, str(how_many))
+        if single_company[1] == 0:
+            wallet.remove(single_company)
+            print "Shares for company %s sold in value %s" % (company_name, str(how_many))
 
 
 def fetch_all_typed_company():
@@ -41,7 +49,9 @@ if __name__ == '__main__':
         wallet1 = []
         fetch_all_typed_company()
         buy(TYPED_COMPANIES[0], 10, wallet1)
-        buy(TYPED_COMPANIES[0], 10, wallet1)
+        buy(TYPED_COMPANIES[1], 10, wallet1)
+        sell(TYPED_COMPANIES[0], 5, wallet1)
+        print "test"
     except Exception as err:
         print("Failed to execute plugin. Reason: %s" % err)
         traceback.print_exc()
