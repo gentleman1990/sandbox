@@ -5,12 +5,16 @@ import shutil
 import os
 import zipfile
 import time
+import datetime
 from getters import get_last_company_name
 
 URL_FOR_STOCK_QUOTES = "http://bossa.pl/pub/ciagle/omega/"
 ZIP_FILE_NAME = "omegacgl.zip"
 FULL_PATH_TO_SOURCE = os.path.dirname(os.path.realpath(__file__)) + "/source/"
 FULL_PATH_TO_LOG = os.path.dirname(os.path.realpath(__file__)) + "/logs/"
+FULL_PATH_TO_TYPING = os.path.dirname(os.path.realpath(__file__)) + "/typing/"
+FULL_PATH_TO_WALLETS = os.path.dirname(os.path.realpath(__file__)) + "/wallets/"
+
 
 def fetch_last_data_file():
     print "Fetching data ..."
@@ -36,6 +40,12 @@ def create_directory_and_unzip_file():
 
     if not os.path.exists(FULL_PATH_TO_LOG):
         os.makedirs(FULL_PATH_TO_LOG)
+
+    if not os.path.exists(FULL_PATH_TO_TYPING):
+        os.makedirs(FULL_PATH_TO_TYPING)
+
+    if not os.path.exists(FULL_PATH_TO_WALLETS):
+        os.makedirs(FULL_PATH_TO_WALLETS)
 
 
 def parse_stock_exchange_data():
@@ -69,7 +79,22 @@ def remove_uncorrected_companies(all_company_data):
             filtered_all_company_data.append(single_company)
     return filtered_all_company_data
 
+
+def save_typed_companies(company_name):
+    filename = str(datetime.date.today())
+    with open(FULL_PATH_TO_TYPING + filename + ".txt", "a") as log_file:
+        log_file.write(company_name)
+
+
 def prepare_data_for_analysis():
-    #fetch_last_data_file()
-    #create_directory_and_unzip_file()
+    fetch_last_data_file()
+    create_directory_and_unzip_file()
     return parse_stock_exchange_data()
+
+
+def get_close_price_from_file(company_name):
+    with open(FULL_PATH_TO_SOURCE + company_name + ".txt", "r") as single_file:
+        for line in single_file:
+            pass
+        last_row = [x.strip() for x in line.split(',')]
+    return round(float(last_row[5]),2)

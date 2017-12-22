@@ -2,7 +2,7 @@
 
 import sys
 import traceback
-from file_operations import prepare_data_for_analysis
+from file_operations import prepare_data_for_analysis, save_typed_companies
 from typing import *
 
 ALL_COMPANY_DATA = []
@@ -27,6 +27,7 @@ def pick_up_for_invest(tbo, tbut):
     typed = list(set(tbo).intersection(tbut))
     for t in typed:
         print "Typed company: " + str(t)
+        save_typed_companies(str(t))
     print "Typing has been completed"
 
 
