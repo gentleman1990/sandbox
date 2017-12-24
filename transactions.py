@@ -5,6 +5,7 @@ import traceback
 import sys
 from file_operations import get_close_price_from_file
 from file_operations import FULL_PATH_TO_TYPING
+from logger import log_error_to_file
 
 TYPED_COMPANIES = []
 
@@ -12,12 +13,12 @@ TYPED_COMPANIES = []
 def buy(company_name, how_many, wallet):
     close_price_from_file = get_close_price_from_file(company_name)
     if not wallet:
-        wallet.append([company_name, how_many, close_price_from_file * how_many])
+        wallet.append([company_name, how_many, close_price_from_file * how_many, str(datetime.date.today())])
         print "Shares for company %s bought in value %s" % (company_name, str(how_many))
     elif already_in_wallet(company_name, wallet):
         print "Company already in wallet - you can't buy more"
     else:
-        wallet.append([company_name, how_many, close_price_from_file * how_many])
+        wallet.append([company_name, how_many, close_price_from_file * how_many], str(datetime.date.today()))
         print "Shares for company %s bought in value %s" % (company_name, str(how_many))
 
 
@@ -33,9 +34,12 @@ def sell(company_name, how_many, wallet):
 
 def fetch_all_typed_company():
     filename = str(datetime.date.today())
-    with open(FULL_PATH_TO_TYPING + filename + ".txt") as f:
-        for company_name in f:
-            TYPED_COMPANIES.append(company_name.rstrip())
+    try:
+        with open(FULL_PATH_TO_TYPING + filename + ".txt") as f:
+            for company_name in f:
+                TYPED_COMPANIES.append(company_name.rstrip())
+    except Exception as err:
+        log_error_to_file("fetch_all_typed_company", "There isn't any typed company")
 
 
 def already_in_wallet(company_name, wallet):

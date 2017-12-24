@@ -1,11 +1,8 @@
 #!/usr/bin/python
 
-import os
-
-
-FULL_PATH_TO_LOGS = os.path.dirname(os.path.realpath(__file__)) + "/logs/"
+from file_operations import return_full_path_to_log_directory
 
 
 def log_error_to_file(function, message):
-    with open(FULL_PATH_TO_LOGS + "log.txt", "a") as log_file:
-        log_file.write(("Function: %s - log message: %s \r\n")%(function, message))
+    with open(return_full_path_to_log_directory + "log.txt", "a") as log_file:
+        log_file.write("Function: %s - log message: %s \r\n" % (function, message))

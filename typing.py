@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-from getters import *
 from logger import log_error_to_file
 from oscillators import *
 

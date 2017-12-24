@@ -98,3 +98,18 @@ def get_close_price_from_file(company_name):
             pass
         last_row = [x.strip() for x in line.split(',')]
     return round(float(last_row[5]),2)
+
+
+def create_subfolder_for_wallets(wallet_name):
+    path_to_specific_wallet = FULL_PATH_TO_WALLETS + wallet_name
+    if not os.path.exists(path_to_specific_wallet):
+        os.makedirs(path_to_specific_wallet)
+    return path_to_specific_wallet
+
+
+def return_full_path_to_wallet_directory():
+    return FULL_PATH_TO_WALLETS
+
+
+def return_full_path_to_log_directory():
+    return FULL_PATH_TO_LOG
