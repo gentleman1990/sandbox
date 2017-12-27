@@ -82,13 +82,13 @@ def remove_uncorrected_companies(all_company_data):
 
 def save_typed_companies(company_name):
     filename = str(datetime.date.today())
-    with open(FULL_PATH_TO_TYPING + filename + ".txt", "a") as log_file:
-        log_file.write(company_name)
+    with open(FULL_PATH_TO_TYPING + filename + ".txt", "a") as typing_file:
+        typing_file.write(company_name + "\r\n")
 
 
 def prepare_data_for_analysis():
-    fetch_last_data_file()
-    create_directory_and_unzip_file()
+    #fetch_last_data_file()
+    #create_directory_and_unzip_file()
     return parse_stock_exchange_data()
 
 
@@ -97,19 +97,19 @@ def get_close_price_from_file(company_name):
         for line in single_file:
             pass
         last_row = [x.strip() for x in line.split(',')]
-    return round(float(last_row[5]),2)
+    return round(float(last_row[5]), 2)
 
 
 def create_subfolder_for_wallets(wallet_name):
-    path_to_specific_wallet = FULL_PATH_TO_WALLETS + wallet_name
+    path_to_specific_wallet = FULL_PATH_TO_WALLETS + wallet_name + "/"
     if not os.path.exists(path_to_specific_wallet):
         os.makedirs(path_to_specific_wallet)
     return path_to_specific_wallet
 
 
-def return_full_path_to_wallet_directory():
+def get_full_path_to_wallet_directory():
     return FULL_PATH_TO_WALLETS
 
 
-def return_full_path_to_log_directory():
+def get_full_path_to_log_directory():
     return FULL_PATH_TO_LOG
