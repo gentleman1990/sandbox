@@ -11,24 +11,41 @@ def calculate_SMA(array_company, days):
     return round(close_price / days, 2)
 
 
+def calculate_SMA_past(array_company, days, days_past_since_now):
+    array_company_with_deleted_items = array_company[:-days_past_since_now]
+    reversed_array = get_reverse_array(array_company_with_deleted_items)
+    close_price = 0
+    for single_day in range(0, days, 1):
+        close_price += get_company_close_price(reversed_array[single_day])
+    return round(close_price / days, 2)
+
+
 def calculate_EMA(array_company, days):
-    ema_array_from_oldest = prepare_EMA_array(array_company, days)
-    return ema_array_from_oldest[len(array_company)-1]
+    reversed_array = get_reverse_array(array_company)
+    multiplier = 2/float(days+1)
+    ema_previous_value = 0.0
+    for day in range(days-1, -1, -1):
+        if ema_previous_value == 0.0:
+            ema_previous_value = calculate_SMA_past(array_company, days, days-2)
+        close_price = get_company_close_price(reversed_array[day])
+        actual_ema = close_price*multiplier + ema_previous_value*(1-multiplier)
+        ema_previous_value = actual_ema
+    return actual_ema
 
 
-def prepare_EMA_array(array_company, days):
-    ema_array = {}
-    index = days - 1
-    for single_day in range(index, len(array_company), 1):
-        close_price = get_company_close_price(array_company[single_day])
-        multiplier = round(2/float(index), 2)
-        if single_day == index:
-            ema_array[index] = calculate_SMA(array_company, days)
-            continue
-        else:
-            ema_day_before = ema_array[single_day - 1]
-        ema_array[single_day] = round((close_price - ema_day_before)*multiplier + ema_day_before, 2)
-    return ema_array
+def calculate_EMA_past(array_company, days, days_past_since_now):
+    array_company_with_deleted_items = array_company[:-days_past_since_now]
+    reversed_array = get_reverse_array(array_company_with_deleted_items)
+    multiplier = 2/float(days+1)
+    ema_previous_value = 0.0
+    for day in range(days-1, -1, -1):
+        if ema_previous_value == 0.0:
+            ema_previous_value = calculate_SMA_past(array_company, days, days-2)
+        close_price = get_company_close_price(reversed_array[day])
+        actual_ema = close_price*multiplier + ema_previous_value*(1-multiplier)
+        ema_previous_value = actual_ema
+    return actual_ema
+
 
 
 def calculate_average_volume(array_company):

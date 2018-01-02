@@ -31,7 +31,7 @@ def type_company_to_invest_by_oscillators(sma30_array, ema15_array, avg_vol_arra
         last_volume = get_last_company_volume(sc)
         if last_volume > 15000 and sma30 > ema15:
             typed_companies_oscillators.append(company_name)
-#           print "Potentially company for investment: " + company_name
+            #print "Potentially company for investment: " + company_name
     return typed_companies_oscillators
 
 
@@ -40,5 +40,5 @@ def type_company_to_invest_by_trending():
     for sc in FILTERED_COMPANIES:
         if check_upper_trending_period(sc, 100):
             upper_trending.append(get_last_company_name(sc))
-#           print "Company with upper trending: " + get_last_company_name(sc)
+            print "Company with upper trending: " + get_last_company_name(sc)
     return upper_trending
