@@ -87,8 +87,8 @@ def save_typed_companies(company_name):
 
 
 def prepare_data_for_analysis():
-    #fetch_last_data_file()
-    #create_directory_and_unzip_file()
+    fetch_last_data_file()
+    create_directory_and_unzip_file()
     return parse_stock_exchange_data()
 
 

@@ -14,12 +14,12 @@ TYPED_COMPANIES = []
 def buy(company_name, how_many, wallet):
     close_price_from_file = get_close_price_from_file(company_name)
     if not wallet:
-        wallet.append([company_name, how_many, close_price_from_file * how_many, str(datetime.date.today())])
+        wallet.append([company_name, how_many, close_price_from_file, str(datetime.date.today())])
         print "Shares for company %s bought in value %s" % (company_name, str(how_many))
     elif already_in_wallet(company_name, wallet):
         print "Company already in wallet - you can't buy more"
     else:
-        wallet.append([company_name, how_many, close_price_from_file * how_many, str(datetime.date.today())])
+        wallet.append([company_name, how_many, close_price_from_file, str(datetime.date.today())])
         print "Shares for company %s bought in value %s" % (company_name, str(how_many))
 
 
@@ -28,9 +28,9 @@ def sell(company_name, how_many, wallet):
         if single_company[0] == company_name:
             single_company[1] = single_company[1] - how_many
             print "Shares for company %s sold in value %s" % (company_name, str(how_many))
-        if single_company[1] == 0:
-            wallet.remove(single_company)
-            print "Shares for company %s sold in value %s" % (company_name, str(how_many))
+        # if single_company[1] == 0:
+        #     wallet.remove(single_company)
+        #     print "Shares for company %s sold in value %s" % (company_name, str(how_many))
 
 
 def fetch_all_typed_company():
@@ -40,7 +40,8 @@ def fetch_all_typed_company():
             for company_name in f:
                 TYPED_COMPANIES.append(company_name.rstrip())
     except Exception as err:
-        log_error_to_file("fetch_all_typed_company", "There isn't any typed company")
+        log_error_to_file("fetch_all_typed_company", "There isn't any typed company" + str(err))
+        sys.exit(1)
 
 
 def already_in_wallet(company_name, wallet):
@@ -56,6 +57,7 @@ if __name__ == '__main__':
         create_new_wallet("test", 10000)
         buy(TYPED_COMPANIES[0], 10, wallet1)
         buy(TYPED_COMPANIES[1], 10, wallet1)
+        actualize_wallet("test", wallet1)
         sell(TYPED_COMPANIES[0], 5, wallet1)
         actualize_wallet("test", wallet1)
     except Exception as err:
