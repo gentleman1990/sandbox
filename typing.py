@@ -9,29 +9,32 @@ FILTERED_COMPANIES = []
 def calculate_oscillators(all_company_data):
     sma30 = {}
     ema15 = {}
+    ema15_day_before = {}
     avg_vol = {}
     for single_company in all_company_data:
         try:
             sma30[get_last_company_name(single_company)] = calculate_SMA(single_company, 30)
             ema15[get_last_company_name(single_company)] = calculate_EMA(single_company, 15)
+            ema15_day_before[get_last_company_name(single_company)] = calculate_EMA_past(single_company, 15, 1)
             avg_vol[get_last_company_name(single_company)] = calculate_average_volume_period(single_company, 200)
             FILTERED_COMPANIES.append(single_company)
         except Exception as error:
             log_error_to_file("calculate_oscillators", ("Problem with calculation for company %s. Reason %s" % (get_last_company_name(single_company), error)))
             pass
-    return sma30, ema15, avg_vol
+    return sma30, ema15, avg_vol, ema15_day_before
 
 
-def type_company_to_invest_by_oscillators(sma30_array, ema15_array, avg_vol_array):
+def type_company_to_invest_by_oscillators(sma30_array, ema15_array, avg_vol_array, ema15_day_before_array):
     typed_companies_oscillators = []
     for sc in FILTERED_COMPANIES:
         company_name = get_last_company_name(sc)
         sma30 = sma30_array[company_name]
         ema15 = ema15_array[company_name]
+        ema15_day_before = ema15_day_before_array[company_name]
         last_volume = get_last_company_volume(sc)
-        if last_volume > 15000 and sma30 > ema15:
+        if last_volume > 15000 and ema15 > ema15_day_before and sma30 > ema15 > 0.98 * sma30:
             typed_companies_oscillators.append(company_name)
-            #print "Potentially company for investment: " + company_name
+            print "Potentially company for investment: " + company_name
     return typed_companies_oscillators
 
 

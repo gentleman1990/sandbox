@@ -10,8 +10,8 @@ ALL_COMPANY_DATA = []
 
 def oscillators():
     print "Starting calculation for oscillators ..."
-    sma30, ema15, avg_vol = calculate_oscillators(ALL_COMPANY_DATA)
-    typed_by_oscillators = type_company_to_invest_by_oscillators(sma30, ema15, avg_vol)
+    sma30, ema15, avg_vol, ema15_day_before = calculate_oscillators(ALL_COMPANY_DATA)
+    typed_by_oscillators = type_company_to_invest_by_oscillators(sma30, ema15, avg_vol, ema15_day_before)
     print "The calculations for oscillators has been completed"
     return typed_by_oscillators
 
@@ -35,8 +35,8 @@ if __name__ == '__main__':
     try:
         ALL_COMPANY_DATA = prepare_data_for_analysis()
         tbo = oscillators()
-        tbut = upper_trending()
-        pick_up_for_invest(tbo, tbut)
+        #tbut = upper_trending()
+        #pick_up_for_invest(tbo, tbut)
     except Exception as err:
         print("Failed to execute plugin. Reason: %s" % err)
         traceback.print_exc()
