@@ -90,7 +90,7 @@ def open_wallet(wallet_name):
 
 
 def open_wallets():
-    opened_wallet_list = []
+    opened_wallet_list = {}
 
     for wallet_name in os.listdir(get_full_path_to_wallet_directory()):
         path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
@@ -102,6 +102,6 @@ def open_wallets():
                 actual_wallet_state.append(single_row)
 
         actual_wallet_state.pop(0)
-        opened_wallet_list.append(actual_wallet_state)
+        opened_wallet_list[wallet_name] = (actual_wallet_state)
 
     return opened_wallet_list
