@@ -61,7 +61,7 @@ def actualize_current_state(single_company_from_actual_state, single_company_fro
         write_to_wallet_history(wallet_name, single_company_from_actual_state[0], str(counts_diff),
                                 sold_price, str(datetime.date.today()), str(result))
 
-        if counts_diff != 0:
+        if int(single_company_from_new_wallet[1]) != 0:
             write_to_wallet(wallet_name, single_company_from_new_wallet[0], single_company_from_new_wallet[1],
                             single_company_from_new_wallet[2], str(datetime.date.today()), single_company_from_new_wallet[4], single_company_from_new_wallet[5])
     else:
