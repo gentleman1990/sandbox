@@ -35,6 +35,9 @@ if __name__ == '__main__':
     try:
         ALL_COMPANY_DATA = prepare_data_for_analysis()
         tbo = oscillators()
+        for t in tbo:
+            print "Typed company: " + str(t)
+            save_typed_companies(str(t), "sma30_ema15")
         #tbut = upper_trending()
         #pick_up_for_invest(tbo, tbut)
     except Exception as err:

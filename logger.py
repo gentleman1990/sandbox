@@ -15,8 +15,8 @@ def write_to_wallet_history(wallet_name, company_name, counts, sold_price, datet
         wallet_history.write(("\r\n%s,%s,%s,%s,%s")%(company_name, counts, sold_price, datetime, result))
 
 
-def write_to_wallet(wallet_name, company_name, counts, pruchase_price, datetime):
+def write_to_wallet(wallet_name, company_name, counts, purchase_price, datetime, stop_loss, take_profit):
     path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
     with open(path_to_wallet + "wallet.txt", "a") as wallet:
-        wallet.write(("\r\n%s,%s,%s,%s")%(company_name, counts, pruchase_price, datetime))
+        wallet.write(("\r\n%s,%s,%s,%s,%s,%s") % (company_name, counts, purchase_price, datetime, stop_loss, take_profit))
 

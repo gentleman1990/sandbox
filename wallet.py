@@ -17,7 +17,7 @@ def create_new_wallet(wallet_name, starting_funds):
         with open(path_to_wallet + "root.txt", "a") as root:
             root.write(str(starting_funds))
         with open(path_to_wallet + "wallet.txt", "a") as wallet:
-            wallet.write("Company Name, Counts, Purchase price, Datetime")
+            wallet.write("Company Name, Counts, Purchase price, Datetime, Stop Loss, Take profit")
         with open(path_to_wallet + "wallet_history.txt", "a") as wallet_history:
             wallet_history.write("Company Name, Counts, Sold price, Datetime, Result")
     else:
@@ -40,7 +40,7 @@ def actualize_wallet(wallet_name, wallet_array):
 
         if new_company_for_purchase:
             write_to_wallet(wallet_name, single_company_from_new_wallet[0], single_company_from_new_wallet[1],
-                            single_company_from_new_wallet[2], str(datetime.date.today()))
+                            single_company_from_new_wallet[2], str(datetime.date.today()), single_company_from_new_wallet[4], single_company_from_new_wallet[5])
 
 
 def lookup_for_companies_to_sold(actual_state, single_company_from_new_wallet, wallet_name):
@@ -63,10 +63,10 @@ def actualize_current_state(single_company_from_actual_state, single_company_fro
 
         if counts_diff != 0:
             write_to_wallet(wallet_name, single_company_from_new_wallet[0], single_company_from_new_wallet[1],
-                            single_company_from_new_wallet[2], str(datetime.date.today()))
+                            single_company_from_new_wallet[2], str(datetime.date.today()), single_company_from_new_wallet[4], single_company_from_new_wallet[5])
     else:
         write_to_wallet(wallet_name, single_company_from_new_wallet[0], single_company_from_new_wallet[1],
-                        single_company_from_new_wallet[2], str(datetime.date.today()))
+                        single_company_from_new_wallet[2], str(datetime.date.today()), single_company_from_new_wallet[4], single_company_from_new_wallet[5])
 
 
 def truncate_wallet_file(wallet_name):
@@ -76,3 +76,14 @@ def truncate_wallet_file(wallet_name):
         wallet.write("Company Name, Counts, Purchase price, Datetime")
 
 
+def open_wallet(wallet_name):
+    path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
+    actual_state = []
+
+    with open(path_to_wallet + "wallet.txt", "r") as single_file:
+        for line in single_file:
+            single_row = [x.strip() for x in line.split(',')]
+            actual_state.append(single_row)
+
+    actual_state.pop(0)
+    return actual_state

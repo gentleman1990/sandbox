@@ -80,15 +80,15 @@ def remove_uncorrected_companies(all_company_data):
     return filtered_all_company_data
 
 
-def save_typed_companies(company_name):
+def save_typed_companies(company_name, algorithm_name):
     filename = str(datetime.date.today())
-    with open(FULL_PATH_TO_TYPING + filename + ".txt", "a") as typing_file:
+    with open(FULL_PATH_TO_TYPING + filename + "_" + algorithm_name + ".txt", "a") as typing_file:
         typing_file.write(company_name + "\r\n")
 
 
 def prepare_data_for_analysis():
-    #fetch_last_data_file()
-    #create_directory_and_unzip_file()
+    fetch_last_data_file()
+    create_directory_and_unzip_file()
     return parse_stock_exchange_data()
 
 
