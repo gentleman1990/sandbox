@@ -28,9 +28,9 @@ def sell(company_name, how_many, wallet):
 
 
 def check_for_selling(wallet_name):
-    wallet_array = open_wallet(wallet_name)
+    wallet_list = open_wallet(wallet_name)
 
-    for sc in wallet_array:
+    for sc in wallet_list:
         close_price = get_close_price_from_file(sc[0])
         stop_loss = sc[4]
         take_profit = sc[5]
@@ -57,14 +57,15 @@ def already_in_wallet(company_name, wallet):
 
 if __name__ == '__main__':
     try:
-        wallet1 = open_wallet("test")
-        all_typed_companies = fetch_all_typed_company("sma30_ema15")
-        create_new_wallet("test", 10000)
-        buy(wallet1, all_typed_companies[0], 10, 5, 5)
-        buy(wallet1, all_typed_companies[1], 10, 5, 5)
-        actualize_wallet("test", wallet1)
-        sell(all_typed_companies[0], 5, wallet1)
-        actualize_wallet("test", wallet1)
+        # wallet1 = open_wallet("test")
+        # all_typed_companies = fetch_all_typed_company("sma30_ema15")
+        create_new_wallet("test2", 10000)
+        # buy(wallet1, all_typed_companies[0], 10, 5, 5)
+        # buy(wallet1, all_typed_companies[1], 10, 5, 5)
+        # actualize_wallet("test", wallet1)
+        # sell(all_typed_companies[0], 5, wallet1)
+        # actualize_wallet("test", wallet1)
+        open_wallets()
     except Exception as err:
         print("Failed to execute plugin. Reason: %s" % err)
         traceback.print_exc()

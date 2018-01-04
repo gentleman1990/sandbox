@@ -24,7 +24,7 @@ def create_new_wallet(wallet_name, starting_funds):
         log_error_to_file("create_new_wallet", "Wallet has been already created!")
 
 
-def actualize_wallet(wallet_name, wallet_array):
+def actualize_wallet(wallet_name, wallet_list):
     path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
     actual_state = []
 
@@ -34,7 +34,7 @@ def actualize_wallet(wallet_name, wallet_array):
             actual_state.append(single_row)
         truncate_wallet_file(wallet_name)
 
-    for single_company_from_new_wallet in wallet_array:
+    for single_company_from_new_wallet in wallet_list:
         new_company_for_purchase = lookup_for_companies_to_sold(actual_state, single_company_from_new_wallet,
                                                                 wallet_name)
 
@@ -87,3 +87,21 @@ def open_wallet(wallet_name):
 
     actual_state.pop(0)
     return actual_state
+
+
+def open_wallets():
+    opened_wallet_list = []
+
+    for wallet_name in os.listdir(get_full_path_to_wallet_directory()):
+        path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
+        actual_wallet_state = []
+
+        with open(path_to_wallet + "wallet.txt", "r") as single_file:
+            for line in single_file:
+                single_row = [x.strip() for x in line.split(',')]
+                actual_wallet_state.append(single_row)
+
+        actual_wallet_state.pop(0)
+        opened_wallet_list.append(actual_wallet_state)
+
+    return opened_wallet_list

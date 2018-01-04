@@ -24,13 +24,13 @@ def calculate_oscillators(all_company_data):
     return sma30, ema15, avg_vol, ema15_day_before
 
 
-def type_company_to_invest_by_oscillators(sma30_array, ema15_array, avg_vol_array, ema15_day_before_array):
+def type_company_to_invest_by_oscillators(sma30_list, ema15_list, avg_vol_list, ema15_day_before_list):
     typed_companies_oscillators = []
     for sc in FILTERED_COMPANIES:
         company_name = get_last_company_name(sc)
-        sma30 = sma30_array[company_name]
-        ema15 = ema15_array[company_name]
-        ema15_day_before = ema15_day_before_array[company_name]
+        sma30 = sma30_list[company_name]
+        ema15 = ema15_list[company_name]
+        ema15_day_before = ema15_day_before_list[company_name]
         last_volume = get_last_company_volume(sc)
         if last_volume > 15000 and ema15 > ema15_day_before and sma30 > ema15 > 0.98 * sma30:
             typed_companies_oscillators.append(company_name)

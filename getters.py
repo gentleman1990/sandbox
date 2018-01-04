@@ -29,38 +29,38 @@ def get_company_volume(single_company_row):
     return int(single_company_row[6])
 
 
-def get_reverse_array(single_array_company):
-    reversed_array = []
-    iterator = reversed(single_array_company)
+def get_reverse_list(single_list_company):
+    reversed_list = []
+    iterator = reversed(single_list_company)
     while iterator.__length_hint__() > 0:
-        reversed_array.append(iterator.next())
+        reversed_list.append(iterator.next())
 
-    return reversed_array
-
-
-def get_last_company_name(single_company_array):
-    return single_company_array[len(single_company_array)-1][0]
+    return reversed_list
 
 
-def get_last_company_date(single_company_array):
-    return single_company_array[len(single_company_array)-1][1]
+def get_last_company_name(single_company_list):
+    return single_company_list[len(single_company_list)-1][0]
 
 
-def get_last_company_open_price(single_company_array):
-    return float(single_company_array[len(single_company_array)-1][2])
+def get_last_company_date(single_company_list):
+    return single_company_list[len(single_company_list)-1][1]
 
 
-def get_last_company_high_price(single_company_array):
-    return float(single_company_array[len(single_company_array)-1][3])
+def get_last_company_open_price(single_company_list):
+    return float(single_company_list[len(single_company_list)-1][2])
 
 
-def get_last_company_low_price(single_company_array):
-    return float(single_company_array[len(single_company_array)-1][4])
+def get_last_company_high_price(single_company_list):
+    return float(single_company_list[len(single_company_list)-1][3])
 
 
-def get_last_company_close_price(single_company_array):
-    return float(single_company_array[len(single_company_array)-1][5])
+def get_last_company_low_price(single_company_list):
+    return float(single_company_list[len(single_company_list)-1][4])
 
 
-def get_last_company_volume(single_company_array):
-    return int(single_company_array[len(single_company_array)-1][6])
+def get_last_company_close_price(single_company_list):
+    return float(single_company_list[len(single_company_list)-1][5])
+
+
+def get_last_company_volume(single_company_list):
+    return int(single_company_list[len(single_company_list)-1][6])

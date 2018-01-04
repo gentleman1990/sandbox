@@ -54,14 +54,14 @@ def parse_stock_exchange_data():
     print "Parsing and preparing data please wait ..."
     for filename in os.listdir(FULL_PATH_TO_SOURCE):
         with open(FULL_PATH_TO_SOURCE + filename, "r") as single_file:
-            single_company_array = []
+            single_company_list = []
             for line in single_file:
                 single_row = [x.strip() for x in line.split(',')]
 
                 if single_row[0] != "Name":
-                    single_company_array.append(single_row)
+                    single_company_list.append(single_row)
 
-            all_company_data.append(single_company_array)
+            all_company_data.append(single_company_list)
     print "Parsing and preparing data finished - it takes " + "{0:.2f}".format(float(time.time() - start_time)) + " seconds"
     filtered = remove_uncorrected_companies(all_company_data)
     return filtered
