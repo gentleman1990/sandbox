@@ -1,14 +1,10 @@
 #!/usr/bin/python
 
-import datetime
 import traceback
 import sys
 
 from file_operations import FULL_PATH_TO_TYPING
-from wallet import actualize_wallet
-from wallet import get_close_price_from_file
-from wallet import open_wallets
-from wallet import create_new_wallet
+from wallet import *
 from logger import log_error_to_file
 
 
@@ -60,6 +56,23 @@ def check_for_selling():
                 actualize_wallet(wallet_name, wallet_list)
 
 
+def check_for_buying(wallet_name, typed_companies_list):
+    # Structure for single company [sc] in wallet you can find in wallet.create_new_wallet()
+    # sc[0] - Company name   | sc[1] - Counts
+    # sc[2] - Purchase price | sc[3] - Datetime
+    # sc[4] - Stop Loss      | sc[5] - Take profit
+
+    opened_wallet = open_wallet(wallet_name)
+    current_wallet_funds = fetch_root_file_for_wallet(wallet_name)[1]
+    free_funds = fetch_root_file_for_wallet(wallet_name)[2]
+
+    for sc in opened_wallet:
+        print sc
+        #odejmowanie od free funds jeżeli coś kupimy
+        # curent wallet funds - obecna wartość portfela - suma wszystkich spółek * close price ?
+        # przy actualize wallet dodać aktualizowanie root o wartości dla free funds i current wallet funds
+
+
 def fetch_all_typed_company(algorithm_name):
     filename = str(datetime.date.today())
     typed_companies = []
@@ -85,6 +98,7 @@ if __name__ == '__main__':
         # all_typed_companies = fetch_all_typed_company("sma30_ema15")
         create_new_wallet("test2", 10000)
         check_for_selling()
+        check_for_buying("test", [])
         # buy(wallet1, all_typed_companies[0], 10, 5, 5)
         # buy(wallet1, all_typed_companies[1], 10, 5, 5)
         # actualize_wallet("test", wallet1)

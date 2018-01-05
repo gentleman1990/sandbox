@@ -6,16 +6,15 @@ import datetime
 from file_operations import create_subfolder_for_wallets
 from file_operations import get_full_path_to_wallet_directory
 from file_operations import get_close_price_from_file
-from logger import log_error_to_file
-from logger import write_to_wallet_history
-from logger import write_to_wallet
+from logger import log_error_to_file, write_to_root_file_wallet, write_to_wallet_history, write_to_wallet
 
 
 def create_new_wallet(wallet_name, starting_funds):
     if not os.path.exists(get_full_path_to_wallet_directory() + wallet_name):
         path_to_wallet = create_subfolder_for_wallets(wallet_name)
         with open(path_to_wallet + "root.txt", "a") as root:
-            root.write(str(starting_funds))
+            root.write("Starting funds, Current funds, Free funds\r\n")
+            root.write(str(starting_funds) + ", " + str(starting_funds) + ", " + str(starting_funds))
         with open(path_to_wallet + "wallet.txt", "a") as wallet:
             wallet.write("Company Name, Counts, Purchase price, Datetime, Stop Loss, Take profit")
         with open(path_to_wallet + "wallet_history.txt", "a") as wallet_history:
@@ -69,11 +68,31 @@ def actualize_current_state(single_company_from_actual_state, single_company_fro
                         single_company_from_new_wallet[2], str(datetime.date.today()), single_company_from_new_wallet[4], single_company_from_new_wallet[5])
 
 
+def actualize_root_file_for_wallet(wallet_name, root_file_list):
+    path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
+    actual_state = []
+
+    with open(path_to_wallet + "root.txt", "r") as single_file:
+        for line in single_file:
+            single_row = [x.strip() for x in line.split(',')]
+            actual_state.append(single_row)
+        truncate_root_file(wallet_name)
+    for root_row in root_file_list:
+        write_to_root_file_wallet(root_row[0], root_row[1], root_row[2])
+
+
 def truncate_wallet_file(wallet_name):
     path_to_wallet = create_subfolder_for_wallets(wallet_name)
     with open(path_to_wallet + "wallet.txt", "a") as wallet:
         wallet.truncate()
         wallet.write("Company Name, Counts, Purchase price, Datetime")
+
+
+def truncate_root_file(wallet_name):
+    path_to_wallet = create_subfolder_for_wallets(wallet_name)
+    with open(path_to_wallet + "root.txt", "a") as wallet:
+        wallet.truncate()
+        wallet.write("Starting funds, Current funds, Free funds")
 
 
 def open_wallet(wallet_name):
@@ -102,6 +121,19 @@ def open_wallets():
                 actual_wallet_state.append(single_row)
 
         actual_wallet_state.pop(0)
-        opened_wallet_list[wallet_name] = (actual_wallet_state)
+        opened_wallet_list[wallet_name] = actual_wallet_state
 
     return opened_wallet_list
+
+
+def fetch_root_file_for_wallet(wallet_name):
+    path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
+    actual_state = []
+
+    with open(path_to_wallet + "root.txt", "r") as single_file:
+        for line in single_file:
+            single_row = [x.strip() for x in line.split(',')]
+            actual_state.append(single_row)
+
+    actual_state.pop(0)
+    return actual_state[1]

@@ -34,7 +34,7 @@ def type_company_to_invest_by_oscillators(sma30_list, ema15_list, avg_vol_list, 
         last_volume = get_last_company_volume(sc)
         if last_volume > 15000 and ema15 > ema15_day_before and sma30 > ema15 > 0.98 * sma30:
             typed_companies_oscillators.append(company_name)
-            print "Potentially company for investment: " + company_name
+            #print "Potentially company for investment: " + company_name
     return typed_companies_oscillators
 
 
