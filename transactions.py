@@ -62,12 +62,16 @@ def check_for_buying(wallet_name, typed_companies_list):
     # sc[2] - Purchase price | sc[3] - Datetime
     # sc[4] - Stop Loss      | sc[5] - Take profit
 
-    opened_wallet = open_wallet(wallet_name)
-    current_wallet_funds = fetch_root_file_for_wallet(wallet_name)[1]
-    free_funds = fetch_root_file_for_wallet(wallet_name)[2]
+    #opened_wallet = open_wallet(wallet_name)
+    wallet_funds = fetch_root_file_for_wallet(wallet_name)[1]
+    wallet_free_funds = fetch_root_file_for_wallet(wallet_name)[2]
 
-    for sc in opened_wallet:
-        print sc
+    funds_per_company = float(wallet_funds) / 5
+
+
+    #for sc in opened_wallet:
+    #    print sc
+    #    get_close_price_from_file(sc[0])
         #odejmowanie od free funds jeżeli coś kupimy
         # curent wallet funds - obecna wartość portfela - suma wszystkich spółek * close price ?
         # przy actualize wallet dodać aktualizowanie root o wartości dla free funds i current wallet funds
