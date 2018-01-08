@@ -2,6 +2,7 @@
 
 import traceback
 import sys
+import math
 
 from file_operations import FULL_PATH_TO_TYPING
 from wallet import *
@@ -62,19 +63,29 @@ def check_for_buying(wallet_name, typed_companies_list):
     # sc[2] - Purchase price | sc[3] - Datetime
     # sc[4] - Stop Loss      | sc[5] - Take profit
 
-    #opened_wallet = open_wallet(wallet_name)
-    wallet_funds = fetch_root_file_for_wallet(wallet_name)[1]
-    wallet_free_funds = fetch_root_file_for_wallet(wallet_name)[2]
-
+    opened_wallet = open_wallet(wallet_name)
+    wallet_funds = float(fetch_root_file_for_wallet(wallet_name)[1])
+    wallet_free_funds = float(fetch_root_file_for_wallet(wallet_name)[2])
     funds_per_company = float(wallet_funds) / 5
+    how_many_company_can_we_obtain = math.floor(wallet_free_funds / funds_per_company)
+
+    try:
+        for index in range(0, int(how_many_company_can_we_obtain), 1):
+            company_name = typed_companies_list[index]
+            close_price = float(get_close_price_from_file(company_name))
+            how_many = math.floor(funds_per_company / close_price)
+            buy(opened_wallet, company_name, how_many, 5, 5)
+        actualize_wallet(wallet_name, opened_wallet)
+    except Exception as err:
+        log_error_to_file("buy", ("Cannot buy stack for wallet %s. Reason: %s") % (wallet_name, err))
 
 
     #for sc in opened_wallet:
     #    print sc
     #    get_close_price_from_file(sc[0])
-        #odejmowanie od free funds jeżeli coś kupimy
-        # curent wallet funds - obecna wartość portfela - suma wszystkich spółek * close price ?
-        # przy actualize wallet dodać aktualizowanie root o wartości dla free funds i current wallet funds
+        #odejmowanie od free funds jezeli cos kupimy
+        # curent wallet funds - obecna wartosc portfela - suma wszystkich spolek * close price ?
+        # przy actualize wallet dodac aktualizowanie root o wartosci dla free funds i current wallet funds
 
 
 def fetch_all_typed_company(algorithm_name):
@@ -99,10 +110,12 @@ def already_in_wallet(company_name, wallet):
 if __name__ == '__main__':
     try:
         # wallet1 = open_wallet("test")
-        # all_typed_companies = fetch_all_typed_company("sma30_ema15")
-        create_new_wallet("test2", 10000)
-        check_for_selling()
-        check_for_buying("test", [])
+        all_typed_companies = fetch_all_typed_company("sma30_ema15")
+
+        if all_typed_companies:
+            create_new_wallet("test2", 10000)
+            check_for_selling()
+            check_for_buying("test", all_typed_companies)
         # buy(wallet1, all_typed_companies[0], 10, 5, 5)
         # buy(wallet1, all_typed_companies[1], 10, 5, 5)
         # actualize_wallet("test", wallet1)
