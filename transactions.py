@@ -39,9 +39,15 @@ def check_for_selling():
     wallets_list = open_wallets()
 
     for wallet_name in wallets_list:
+        root_wallet = fetch_root_file_for_wallet(wallet_name)
+        starting_funds = float(root_wallet[0])
+        wallet_funds = float(root_wallet[1])
+        wallet_free_funds = float(root_wallet[2])
+
         for sc in wallets_list[wallet_name]:
             wallet_list = wallets_list[wallet_name]
             close_price = get_close_price_from_file(sc[0])
+            count = int(sc[1])
             stop_loss = float(sc[4])
             take_profit = float(sc[5])
             purchase_price = float(sc[2])
@@ -49,6 +55,10 @@ def check_for_selling():
             if close_price < stop_loss:
                 sell(wallet_list, sc[0], sc[1])
                 actualize_wallet(wallet_name, wallet_list)
+
+                wallet_funds += (close_price * count)
+                wallet_free_funds += (close_price * count)
+                actualize_root_file_for_wallet(wallet_name, [starting_funds, wallet_funds, wallet_free_funds])
             elif close_price > take_profit:
                 sc[4] = take_profit
                 current_percentage_profit = (take_profit * 100 / purchase_price)
@@ -64,8 +74,10 @@ def check_for_buying(wallet_name, typed_companies_list):
     # sc[4] - Stop Loss      | sc[5] - Take profit
 
     opened_wallet = open_wallet(wallet_name)
-    wallet_funds = float(fetch_root_file_for_wallet(wallet_name)[1])
-    wallet_free_funds = float(fetch_root_file_for_wallet(wallet_name)[2])
+    root_file_for_wallet = fetch_root_file_for_wallet(wallet_name)
+    starting_funds = float(root_file_for_wallet[0])
+    wallet_funds = float(root_file_for_wallet[1])
+    wallet_free_funds = float(root_file_for_wallet[2])
     funds_per_company = float(wallet_funds) / 5
     how_many_company_can_we_obtain = math.floor(wallet_free_funds / funds_per_company)
 
@@ -73,9 +85,11 @@ def check_for_buying(wallet_name, typed_companies_list):
         for index in range(0, int(how_many_company_can_we_obtain), 1):
             company_name = typed_companies_list[index]
             close_price = float(get_close_price_from_file(company_name))
-            how_many = math.floor(funds_per_company / close_price)
+            how_many = int(math.floor(funds_per_company / close_price))
             buy(opened_wallet, company_name, how_many, 5, 5)
+            wallet_free_funds -= (float(how_many) * close_price)
         actualize_wallet(wallet_name, opened_wallet)
+        actualize_root_file_for_wallet(wallet_name, [starting_funds, wallet_funds, wallet_free_funds])
     except Exception as err:
         log_error_to_file("buy", ("Cannot buy stack for wallet %s. Reason: %s") % (wallet_name, err))
 
@@ -110,10 +124,11 @@ def already_in_wallet(company_name, wallet):
 if __name__ == '__main__':
     try:
         # wallet1 = open_wallet("test")
+        create_new_wallet("test3", 15000)
         all_typed_companies = fetch_all_typed_company("sma30_ema15")
 
         if all_typed_companies:
-            create_new_wallet("test2", 10000)
+            create_new_wallet("test", 10000)
             check_for_selling()
             check_for_buying("test", all_typed_companies)
         # buy(wallet1, all_typed_companies[0], 10, 5, 5)

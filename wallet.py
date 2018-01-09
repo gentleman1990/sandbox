@@ -77,8 +77,8 @@ def actualize_root_file_for_wallet(wallet_name, root_file_list):
             single_row = [x.strip() for x in line.split(',')]
             actual_state.append(single_row)
         truncate_root_file(wallet_name)
-    for root_row in root_file_list:
-        write_to_root_file_wallet(root_row[0], root_row[1], root_row[2])
+
+    write_to_root_file_wallet(wallet_name, root_file_list[0], root_file_list[1], root_file_list[2])
 
 
 def truncate_wallet_file(wallet_name):
@@ -136,4 +136,4 @@ def fetch_root_file_for_wallet(wallet_name):
             actual_state.append(single_row)
 
     actual_state.pop(0)
-    return actual_state[1]
+    return actual_state[0]

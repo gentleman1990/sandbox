@@ -23,6 +23,6 @@ def write_to_wallet(wallet_name, company_name, counts, purchase_price, datetime,
 
 def write_to_root_file_wallet(wallet_name, starting_funds, current_funds, free_funds):
     path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
-    with open(path_to_wallet + "root.txt", "a") as wallet_history:
-        wallet_history.write(("\r\n%s,%s,%s")%(starting_funds, current_funds, free_funds))
+    with open(path_to_wallet + "root.txt", "a") as wallet_root:
+        wallet_root.write(("\r\n%s,%s,%s")%(starting_funds, current_funds, free_funds))
 
