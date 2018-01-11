@@ -83,13 +83,13 @@ def remove_uncorrected_companies(all_company_data):
 def save_typed_companies(company_name, algorithm_name):
     filename = str(datetime.date.today())
     with open(FULL_PATH_TO_TYPING + filename + "_" + algorithm_name + ".txt", "a") as typing_file:
+        typing_file.truncate()
         typing_file.write(company_name + "\r\n")
 
 
 def prepare_data_for_analysis():
     fetch_last_data_file()
     create_directory_and_unzip_file()
-    return parse_stock_exchange_data()
 
 
 def get_close_price_from_file(company_name):
