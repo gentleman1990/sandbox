@@ -83,9 +83,16 @@ def remove_uncorrected_companies(all_company_data):
 def save_typed_companies(company_name, algorithm_name):
     filename = str(datetime.date.today())
     with open(FULL_PATH_TO_TYPING + filename + "_" + algorithm_name + ".txt", "a") as typing_file:
-        typing_file.truncate()
         typing_file.write(company_name + "\r\n")
 
+
+def save_typed_companies_for_simulator(companies_list, algorithm_name):
+    with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt", "a") as typing_file:
+        typing_file.truncate()
+    for sc in companies_list:
+        print "Typed company: " + str(sc)
+        with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt", "a") as typing_file:
+            typing_file.write(sc + "\r\n")
 
 def prepare_data_for_analysis():
     fetch_last_data_file()

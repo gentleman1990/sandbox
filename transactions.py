@@ -122,6 +122,18 @@ def fetch_all_typed_company(algorithm_name):
     return typed_companies
 
 
+def fetch_all_typed_company_for_simulator(algorithm_name):
+    typed_companies = []
+    try:
+        with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt") as f:
+            for company_name in f:
+                typed_companies.append(company_name.rstrip())
+    except Exception as err:
+        log_error_to_file("fetch_all_typed_company", "There isn't any typed company" + str(err))
+        sys.exit(1)
+    return typed_companies
+
+
 def already_in_wallet(company_name, wallet):
     for single_company in wallet:
         if single_company[0] == company_name:
