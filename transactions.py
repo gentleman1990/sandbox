@@ -143,13 +143,13 @@ def already_in_wallet(company_name, wallet):
 if __name__ == '__main__':
     try:
         # wallet1 = open_wallet("test")
-        create_new_wallet("test3", 15000)
+        # create_new_wallet("test3", 15000)
         all_typed_companies = fetch_all_typed_company("sma30_ema15")
 
         if all_typed_companies:
-            create_new_wallet("test", 10000)
+            create_new_wallet("sma_ema", 10000)
             check_for_selling()
-            check_for_buying("test", all_typed_companies)
+            check_for_buying("sma_ema", all_typed_companies)
         # buy(wallet1, all_typed_companies[0], 10, 5, 5)
         # buy(wallet1, all_typed_companies[1], 10, 5, 5)
         # actualize_wallet("test", wallet1)

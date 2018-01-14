@@ -34,11 +34,82 @@ def simulate_in_the_past(number_of_days):
 def buy_and_sell():
     all_typed_companies = fetch_all_typed_company_for_simulator("sma30_ema15")
     if all_typed_companies:
-        check_for_selling()
-        check_for_buying("simulator", all_typed_companies)
+        check_for_selling_for_simulator()
+        check_for_buying_for_simulator("simulator", all_typed_companies)
 
         #poprawic get_close_price_from file dla buying i selling
 
+
+def check_for_selling_for_simulator():
+    # Structure for single company [sc] in wallet you can find in wallet.create_new_wallet()
+    # sc[0] - Company name   | sc[1] - Counts
+    # sc[2] - Purchase price | sc[3] - Datetime
+    # sc[4] - Stop Loss      | sc[5] - Take profit
+
+    wallets_list = open_wallets()
+
+    for wallet_name in wallets_list:
+        root_wallet = fetch_root_file_for_wallet(wallet_name)
+        starting_funds = float(root_wallet[0])
+        wallet_funds = float(root_wallet[1])
+        wallet_free_funds = float(root_wallet[2])
+
+        for sc in wallets_list[wallet_name]:
+            wallet_list = wallets_list[wallet_name]
+            close_price = get_close_price_from_file(sc[0])
+            count = int(sc[1])
+            stop_loss = float(sc[4])
+            take_profit = float(sc[5])
+            purchase_price = float(sc[2])
+
+            if close_price < stop_loss:
+                sell(wallet_list, sc[0], sc[1])
+                actualize_wallet(wallet_name, wallet_list)
+
+                wallet_funds += ((close_price - purchase_price) * count)
+                wallet_free_funds += (close_price * count)
+                actualize_root_file_for_wallet(wallet_name, [starting_funds, wallet_funds, wallet_free_funds])
+            elif close_price > take_profit:
+                current_percentage_profit = (take_profit * 100 / purchase_price)
+                sc[4] = round(float(sc[2]) * (float(current_percentage_profit - 2.5) / 100), 2)
+                new_take_profit = round(float(sc[2]) * (float(current_percentage_profit + 5) / 100), 2)
+                sc[5] = new_take_profit
+                actualize_wallet(wallet_name, wallet_list)
+
+
+def check_for_buying_for_simulator(wallet_name, typed_companies_list):
+    # Structure for single company [sc] in wallet you can find in wallet.create_new_wallet()
+    # sc[0] - Company name   | sc[1] - Counts
+    # sc[2] - Purchase price | sc[3] - Datetime
+    # sc[4] - Stop Loss      | sc[5] - Take profit
+
+    opened_wallet = open_wallet(wallet_name)
+    cleared_typed_companies_list = remove_companies_already_in_wallet(opened_wallet, typed_companies_list)
+    root_file_for_wallet = fetch_root_file_for_wallet(wallet_name)
+    starting_funds = float(root_file_for_wallet[0])
+    wallet_funds = float(root_file_for_wallet[1])
+    wallet_free_funds = float(root_file_for_wallet[2])
+    funds_per_company = float(wallet_funds) / 5
+    how_many_company_can_we_obtain = 5 - len(opened_wallet)
+
+    try:
+        for index in range(0, int(how_many_company_can_we_obtain), 1):
+            company_name = cleared_typed_companies_list[index]
+            close_price = float(get_close_price_from_file(company_name))
+            how_many = int(math.floor(funds_per_company / close_price))
+            total_cost = (float(how_many) * close_price)
+            if wallet_free_funds > total_cost:
+                buy(opened_wallet, company_name, how_many, 5, 5)
+                wallet_free_funds -= total_cost
+            elif total_cost > wallet_free_funds > 1000:
+                how_many = int(math.floor(wallet_free_funds / close_price))
+                total_cost = (float(how_many) * close_price)
+                buy(opened_wallet, company_name, how_many, 5, 5)
+                wallet_free_funds -= total_cost
+        actualize_wallet(wallet_name, opened_wallet)
+        actualize_root_file_for_wallet(wallet_name, [starting_funds, wallet_funds, wallet_free_funds])
+    except Exception as err:
+        log_error_to_file("buy", ("Cannot buy stack for wallet %s. Reason: %s") % (wallet_name, err))
 
 if __name__ == '__main__':
     try:
