@@ -83,14 +83,14 @@ def actualize_root_file_for_wallet(wallet_name, root_file_list):
 
 def truncate_wallet_file(wallet_name):
     path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
-    with open(path_to_wallet + "wallet.txt", "a") as wallet:
+    with open(path_to_wallet + "wallet.txt", "rw+") as wallet:
         wallet.truncate()
         wallet.write("Company Name, Counts, Purchase price, Datetime")
 
 
 def truncate_root_file(wallet_name):
     path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
-    with open(path_to_wallet + "root.txt", "a") as wallet:
+    with open(path_to_wallet + "root.txt", "rw+") as wallet:
         wallet.truncate()
         wallet.write("Starting funds, Current funds, Free funds")
 
