@@ -32,6 +32,7 @@ def type_company_to_invest_by_oscillators(filtered_companies, sma30_list, ema15_
         ema15_day_before = ema15_day_before_list[company_name]
         last_volume = get_last_company_volume(sc)
         if last_volume > 15000 and ema15 > ema15_day_before and sma30 > ema15 > 0.98 * sma30:
+            print "Company name: %s ema15: %s, sma30 %s" % (company_name, ema15, sma30)
             insert_into_sorted_list(company_name, last_volume, typed_companies_oscillators)
             #print "Potentially company for investment: " + company_name
     return fetch_companies_names_from_sorted_list(typed_companies_oscillators)

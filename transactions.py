@@ -9,6 +9,12 @@ from wallet import *
 from logger import log_error_to_file
 
 
+def buy2(wallet_name, company_name, source_data):
+    wallet = open_wallet(wallet_name)
+    print ""
+    save_wallet(wallet_name, wallet)
+
+
 def buy(wallet, company_name, how_many, percentage_stop_loss, percentage_take_profit):
     close_price_from_file = get_close_price_from_file(company_name)
     stop_loss = round(float(close_price_from_file) * (float(100 - percentage_stop_loss) / 100),2)
@@ -142,15 +148,18 @@ def already_in_wallet(company_name, wallet):
 
 if __name__ == '__main__':
     try:
-        # wallet1 = open_wallet("test")
-        # create_new_wallet("test3", 15000)
+
+        create_new_wallet("test", 15000)
+        wallet1 = open_wallet("test")
         all_typed_companies = fetch_all_typed_company("sma30_ema15")
 
         if all_typed_companies:
             create_new_wallet("sma_ema", 10000)
             check_for_selling()
             check_for_buying("sma_ema", all_typed_companies)
-        # buy(wallet1, all_typed_companies[0], 10, 5, 5)
+        buy(wallet1, all_typed_companies[0], 10, 5, 5)
+
+        save_wallet("test",wallet1)
         # buy(wallet1, all_typed_companies[1], 10, 5, 5)
         # actualize_wallet("test", wallet1)
         # sell(all_typed_companies[0], 5, wallet1)

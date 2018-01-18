@@ -87,12 +87,13 @@ def save_typed_companies(company_name, algorithm_name):
 
 
 def save_typed_companies_for_simulator(companies_list, algorithm_name):
-    with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt", "a") as typing_file:
+    with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt", "r+") as typing_file:
         typing_file.truncate()
     for sc in companies_list:
         print "Typed company: " + str(sc)
         with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt", "a") as typing_file:
             typing_file.write(sc + "\r\n")
+
 
 def prepare_data_for_analysis():
     fetch_last_data_file()

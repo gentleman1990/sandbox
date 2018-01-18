@@ -21,63 +21,67 @@ def simulate_in_the_past(number_of_days):
                     excluded_companies += 1
                 else:
                     companies_to_analysis.append(single_company)
-                #                    print "Different data than first one => current: %s and reference %s for company %s" %(current_date, data_in_the_past, single_company[0])
+                #   print "Different data than first one => current: %s and reference %s for company %s" %(current_date, data_in_the_past, single_company[0])
             except Exception:
                 #print "Problem with moving past with company ! Removing it from further analysis!"
                 excluded_companies += 1
         print "Excluded companies: " + str(excluded_companies)
         tbo = oscillators(companies_to_analysis)
         save_typed_companies_for_simulator(tbo, "sma30_ema15")
-        buy_and_sell()
+        #buy_and_sell(companies_to_analysis)
 
 
-def buy_and_sell():
-    all_typed_companies = fetch_all_typed_company_for_simulator("sma30_ema15")
-    if all_typed_companies:
-        check_for_selling_for_simulator()
-        check_for_buying_for_simulator("simulator", all_typed_companies)
+def buy_and_sell(source_companies_data):
+    atc = fetch_all_typed_company_for_simulator("sma30_ema15")
+    if atc:
+        check_for_selling_for_simulator("simulator", source_companies_data)
+        check_for_buying_for_simulator("simulator", atc, source_companies_data)
 
         #poprawic get_close_price_from file dla buying i selling
 
 
-def check_for_selling_for_simulator():
+def get_close_price_from_companies_list(companies_list, company_name):
+    for sc in companies_list:
+        if sc[-1][0] == company_name:
+            return sc[-1][5]
+
+
+def check_for_selling_for_simulator(wallet_name, source_companies_data):
     # Structure for single company [sc] in wallet you can find in wallet.create_new_wallet()
     # sc[0] - Company name   | sc[1] - Counts
     # sc[2] - Purchase price | sc[3] - Datetime
     # sc[4] - Stop Loss      | sc[5] - Take profit
 
-    wallets_list = open_wallets()
+    opened_wallet = open_wallet(wallet_name)
 
-    for wallet_name in wallets_list:
-        root_wallet = fetch_root_file_for_wallet(wallet_name)
-        starting_funds = float(root_wallet[0])
-        wallet_funds = float(root_wallet[1])
-        wallet_free_funds = float(root_wallet[2])
+    root_wallet = fetch_root_file_for_wallet(wallet_name)
+    starting_funds = float(root_wallet[0])
+    wallet_funds = float(root_wallet[1])
+    wallet_free_funds = float(root_wallet[2])
 
-        for sc in wallets_list[wallet_name]:
-            wallet_list = wallets_list[wallet_name]
-            close_price = get_close_price_from_file(sc[0])
-            count = int(sc[1])
-            stop_loss = float(sc[4])
-            take_profit = float(sc[5])
-            purchase_price = float(sc[2])
+    for sc in opened_wallet:
+        close_price = float(get_close_price_from_companies_list(source_companies_data, sc[0]))
+        count = int(sc[1])
+        stop_loss = float(sc[4])
+        take_profit = float(sc[5])
+        purchase_price = float(sc[2])
 
-            if close_price < stop_loss:
-                sell(wallet_list, sc[0], sc[1])
-                actualize_wallet(wallet_name, wallet_list)
+        if close_price < stop_loss:
+            sell(sc, sc[0], sc[1])
+            actualize_wallet(wallet_name, opened_wallet)
 
-                wallet_funds += ((close_price - purchase_price) * count)
-                wallet_free_funds += (close_price * count)
-                actualize_root_file_for_wallet(wallet_name, [starting_funds, wallet_funds, wallet_free_funds])
-            elif close_price > take_profit:
-                current_percentage_profit = (take_profit * 100 / purchase_price)
-                sc[4] = round(float(sc[2]) * (float(current_percentage_profit - 2.5) / 100), 2)
-                new_take_profit = round(float(sc[2]) * (float(current_percentage_profit + 5) / 100), 2)
-                sc[5] = new_take_profit
-                actualize_wallet(wallet_name, wallet_list)
+            wallet_funds += ((close_price - purchase_price) * count)
+            wallet_free_funds += (close_price * count)
+            actualize_root_file_for_wallet(wallet_name, [starting_funds, wallet_funds, wallet_free_funds])
+        elif close_price > take_profit:
+            current_percentage_profit = (take_profit * 100 / purchase_price)
+            sc[4] = round(float(sc[2]) * (float(current_percentage_profit - 2.5) / 100), 2)
+            new_take_profit = round(float(sc[2]) * (float(current_percentage_profit + 5) / 100), 2)
+            sc[5] = new_take_profit
+            actualize_wallet(wallet_name, opened_wallet)
 
 
-def check_for_buying_for_simulator(wallet_name, typed_companies_list):
+def check_for_buying_for_simulator(wallet_name, typed_companies_list, source_data):
     # Structure for single company [sc] in wallet you can find in wallet.create_new_wallet()
     # sc[0] - Company name   | sc[1] - Counts
     # sc[2] - Purchase price | sc[3] - Datetime
@@ -95,7 +99,7 @@ def check_for_buying_for_simulator(wallet_name, typed_companies_list):
     try:
         for index in range(0, int(how_many_company_can_we_obtain), 1):
             company_name = cleared_typed_companies_list[index]
-            close_price = float(get_close_price_from_file(company_name))
+            close_price = float(get_close_price_from_companies_list(source_data, company_name))
             how_many = int(math.floor(funds_per_company / close_price))
             total_cost = (float(how_many) * close_price)
             if wallet_free_funds > total_cost:
