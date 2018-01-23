@@ -30,18 +30,6 @@ def pick_up_for_invest(tbo, tbut):
     print "Typing has been completed"
 
 
-def calculate_last_date(all_company_data):
+def calculate_last_day_for(all_company_data):
     tbo = oscillators(all_company_data)
-    for t in tbo:
-        print "Typed company: " + str(t)
-        save_typed_companies(str(t), "sma30_ema15")
-
-if __name__ == '__main__':
-    try:
-        prepare_data_for_analysis()
-        calculate_last_date(parse_stock_exchange_data())
-
-    except Exception as err:
-        print("Failed to execute plugin. Reason: %s" % err)
-        traceback.print_exc()
-        sys.exit(1)
+    save_typed_companies(tbo, "sma30_ema15")

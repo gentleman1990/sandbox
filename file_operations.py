@@ -80,10 +80,14 @@ def remove_uncorrected_companies(all_company_data):
     return filtered_all_company_data
 
 
-def save_typed_companies(company_name, algorithm_name):
+def save_typed_companies(companies_list, algorithm_name):
     filename = str(datetime.date.today())
     with open(FULL_PATH_TO_TYPING + filename + "_" + algorithm_name + ".txt", "a") as typing_file:
-        typing_file.write(company_name + "\r\n")
+        typing_file.truncate()
+    for sc in companies_list:
+        print "Typed company: " + str(sc)
+        with open(FULL_PATH_TO_TYPING + filename + "_" + algorithm_name + ".txt", "a") as typing_file:
+            typing_file.write(sc + "\r\n")
 
 
 def save_typed_companies_for_simulator(companies_list, algorithm_name):
@@ -98,14 +102,6 @@ def save_typed_companies_for_simulator(companies_list, algorithm_name):
 def prepare_data_for_analysis():
     fetch_last_data_file()
     create_directory_and_unzip_file()
-
-
-def get_close_price_from_file(company_name):
-    with open(FULL_PATH_TO_SOURCE + company_name + ".txt", "r") as single_file:
-        for line in single_file:
-            pass
-        last_row = [x.strip() for x in line.split(',')]
-    return round(float(last_row[5]), 2)
 
 
 def create_subfolder_for_wallets(wallet_name):

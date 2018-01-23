@@ -64,3 +64,36 @@ def get_last_company_close_price(single_company_list):
 
 def get_last_company_volume(single_company_list):
     return int(single_company_list[len(single_company_list)-1][6])
+
+
+def get_last_close_price(company_name, source_data):
+    for single_company in source_data:
+        if company_name == get_last_company_name(single_company):
+            return get_last_company_close_price(single_company)
+
+
+def get_purchase_price_for_company_in_wallet(single_company):
+    return float(single_company[2])
+
+
+def get_number_of_shares_for_company_in_wallet(single_company):
+    return int(single_company[1])
+
+
+def get_purchase_date_for_company_in_wallet(single_company):
+    return single_company[3]
+
+
+def get_stop_loss_for_company_in_wallet(single_company):
+    return float(single_company[4])
+
+
+def get_take_profit_for_company_in_wallet(single_company):
+    return float(single_company[5])
+
+
+def fetch_companies_names_from_sorted_list(sorted_list):
+    typed_companies = []
+    for row in sorted_list:
+        typed_companies.append(row[0])
+    return typed_companies
