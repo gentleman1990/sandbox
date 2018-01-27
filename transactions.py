@@ -38,11 +38,11 @@ def buy(source_data, typed_companies_list, wallet):
 
 def analyze_for_selling(wallet_name, source_data):
     wallet = open_wallet(wallet_name)
-    wallet_after_selling = sell(wallet, source_data)
+    wallet_after_selling = sell(wallet_name, wallet, source_data)
     save_wallet(wallet_name, wallet_after_selling)
 
 
-def sell(wallet, source_data):
+def sell(wallet_name, wallet, source_data):
     wallet_after_selling = []
     for single_company in wallet:
         company_name = get_company_name(single_company)
@@ -62,6 +62,8 @@ def sell(wallet, source_data):
         elif close_price < stop_loss:
             print "Shares for company %s sold in value %s" % (
             company_name, str(get_number_of_shares_for_company_in_wallet(single_company)))
+
+            save_wallet_history(wallet_name, fetch_single_wallet_list_row_for_selling(single_company, source_data))
         else:
             wallet_after_selling.append(single_company)
     return wallet_after_selling
@@ -104,3 +106,16 @@ def fetch_all_typed_company_for_simulator(algorithm_name):
         log_error_to_file("fetch_all_typed_company", "There isn't any typed company" + str(err))
         sys.exit(1)
     return typed_companies
+
+
+def fetch_single_wallet_list_row_for_selling(single_company, source_data):
+    wallet_history_list_row = []
+    company_name = get_company_name(single_company)
+    close_price = get_last_close_price(company_name, source_data)
+    purchase_price = get_purchase_price_for_company_in_wallet(single_company)
+    number_of_shares = get_number_of_shares_for_company_in_wallet(single_company)
+    result = round(float(close_price - purchase_price) * number_of_shares, 2)
+    date = str(datetime.date.today())
+    wallet_history_list_row.append([company_name, number_of_shares, close_price, date, result])
+
+    return wallet_history_list_row

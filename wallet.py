@@ -53,6 +53,13 @@ def save_wallet(wallet_name, wallet_list):
         wallet_file.write("\r\n%s" % sc)
 
 
+def save_wallet_history(wallet_name, wallet_list_row):
+    path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
+    wallet_file = open(path_to_wallet + "wallet_history.txt", "a")
+    for sc in wallet_list_row:
+        wallet_file.write("\r\n%s" % sc)
+
+
 def fetch_root_file_for_wallet(wallet_name):
     path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
     actual_state = []
