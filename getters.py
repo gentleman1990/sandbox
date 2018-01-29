@@ -43,31 +43,31 @@ def get_reverse_list(single_list_company):
 
 
 def get_last_company_name(single_company_list):
-    return single_company_list[len(single_company_list)-1][0]
+    return single_company_list[-1][0]
 
 
 def get_last_company_date(single_company_list):
-    return single_company_list[len(single_company_list)-1][1]
+    return single_company_list[-1][1]
 
 
 def get_last_company_open_price(single_company_list):
-    return float(single_company_list[len(single_company_list)-1][2])
+    return float(single_company_list[-1][2])
 
 
 def get_last_company_high_price(single_company_list):
-    return float(single_company_list[len(single_company_list)-1][3])
+    return float(single_company_list[-1][3])
 
 
 def get_last_company_low_price(single_company_list):
-    return float(single_company_list[len(single_company_list)-1][4])
+    return float(single_company_list[-1][4])
 
 
 def get_last_company_close_price(single_company_list):
-    return float(single_company_list[len(single_company_list)-1][5])
+    return float(single_company_list[-1][5])
 
 
 def get_last_company_volume(single_company_list):
-    return int(single_company_list[len(single_company_list)-1][6])
+    return int(single_company_list[-1][6])
 
 
 def get_last_close_price(company_name, source_data):
