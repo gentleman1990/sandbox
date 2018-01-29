@@ -66,6 +66,10 @@ def get_last_company_close_price(single_company_list):
     return float(single_company_list[-1][5])
 
 
+def get_last_company_close_price_past_days(number_of_days, single_company_list):
+    return float(single_company_list[-number_of_days][5])
+
+
 def get_last_company_volume(single_company_list):
     return int(single_company_list[-1][6])
 

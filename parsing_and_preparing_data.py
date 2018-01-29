@@ -1,17 +1,16 @@
 #!/usr/bin/python
 
-import sys
-import traceback
-import copy
-from file_operations import prepare_data_for_analysis, save_typed_companies, parse_stock_exchange_data
+import time
+from file_operations import save_typed_companies
 from typing import *
 
 
 def oscillators(all_company_data_list):
+    start_time = time.time()
     print "Starting calculation for oscillators ..."
     filtered_companies, sma30, ema15, avg_vol, ema15_day_before = calculate_oscillators(all_company_data_list)
     typed_by_oscillators = type_company_to_invest_by_oscillators(filtered_companies, sma30, ema15, avg_vol, ema15_day_before)
-    print "The calculations for oscillators has been completed"
+    print "The calculations for oscillators has been completed - it takes " + "{0:.2f}".format(float(time.time() - start_time)) + " seconds"
     return typed_by_oscillators
 
 

@@ -20,7 +20,7 @@ def calculate_oscillators(all_company_data):
             ema15_day_before[get_last_company_name(single_company)] = calculate_EMA_past(single_company, 15, 1)
             avg_vol[get_last_company_name(single_company)] = calculate_average_volume_period(single_company, 200)
 
-            if close_price > 1.5:
+            if close_price > 1.5 and is_price_enough_flipping(single_company):
                 filtered_companies.append(single_company)
 
         except Exception as error:
@@ -43,6 +43,15 @@ def type_company_to_invest_by_oscillators(filtered_companies, sma30_list, ema15_
             #print "Potentially company for investment: " + company_name
     return fetch_companies_names_from_sorted_list(typed_companies_oscillators)
 
+
+def is_price_enough_flipping(single_company):
+    days_in_the_past = 60
+    reference_close_price = get_last_company_close_price_past_days(days_in_the_past, single_company)
+    for index in range(-days_in_the_past, 0, 1):
+        close_price = get_company_close_price(single_company[index])
+        if (close_price > (1.05 * reference_close_price)) or (close_price < (0.95 * reference_close_price)):
+            return True
+    return False
 
 # def type_company_to_invest_by_trending():
 #     upper_trending = []
