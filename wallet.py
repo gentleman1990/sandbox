@@ -9,6 +9,7 @@ from logger import log_error_to_file
 WALLET_HEADER = "Company Name, Counts, Purchase price, Datetime, Stop Loss, Take profit"
 STATISTICS_HEADER = "Date, Current wallet value, Total results\r\n"
 WALLET_HISTORY_HEADER = "Company Name, Counts, Sold price, Datetime, Result"
+STARTING_FUNDS = 15000
 
 
 def create_new_wallet(wallet_name):
@@ -20,6 +21,8 @@ def create_new_wallet(wallet_name):
             wallet.write(WALLET_HEADER)
         with open(path_to_wallet + "wallet_history.txt", "a") as wallet_history:
             wallet_history.write(WALLET_HISTORY_HEADER)
+        with open(path_to_wallet + "free_funds.txt", "a") as free_funds:
+            free_funds.write(str(STARTING_FUNDS))
     else:
         log_error_to_file("create_new_wallet", "Wallet has been already created!")
 
@@ -76,3 +79,27 @@ def save_statistics(wallet_name, statistics_list_row):
     path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
     statistics_file = open(path_to_wallet + "statistics.txt", "a")
     statistics_file.write("\r\n%s" % statistics_list_row)
+
+
+def update_free_funds(wallet_name, value):
+    current_value = 0
+    path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
+    with open(path_to_wallet + "free_funds.txt", "r+") as free_funds:
+        for line in free_funds:
+            current_value = float(line)
+        free_funds.close()
+
+    with open(path_to_wallet + "free_funds.txt", "r+") as free_funds:
+        free_funds.truncate()
+        current_value = current_value + value
+        free_funds.write(str(current_value))
+
+
+def fetch_free_funds(wallet_name):
+    path_to_wallet = get_full_path_to_wallet_directory() + wallet_name + "/"
+    with open(path_to_wallet + "free_funds.txt", "r+") as free_funds:
+        for line in free_funds:
+            return float(line)
+
+
+

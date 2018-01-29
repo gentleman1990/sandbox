@@ -2,12 +2,13 @@
 
 import datetime
 from getters import *
-from wallet import save_statistics, open_wallet, open_wallet_history
+from wallet import save_statistics, open_wallet, open_wallet_history, fetch_free_funds
 
 
 def prepare_statistics(wallet_name, source_data):
     wallet = open_wallet(wallet_name)
     wallet_history = open_wallet_history(wallet_name)
+    free_funds = fetch_free_funds(wallet_name)
     current_wallet_value = 0
     total_result = 0
 
@@ -24,5 +25,6 @@ def prepare_statistics(wallet_name, source_data):
         current_wallet_value = current_wallet_value + result
         total_result = total_result + result
 
-    single_statistics_row = ([str(datetime.date.today()), current_wallet_value, total_result])
+    current_wallet_value = current_wallet_value + free_funds
+    single_statistics_row = ([str(datetime.date.today()), round(current_wallet_value, 2), total_result])
     save_statistics(wallet_name, single_statistics_row)

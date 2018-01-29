@@ -12,7 +12,7 @@ from statistics import prepare_statistics
 
 if __name__ == '__main__':
     try:
-        prepare_data_for_analysis()
+        #prepare_data_for_analysis()
         source_data = parse_stock_exchange_data()
         calculate_last_day_for(source_data)
 
