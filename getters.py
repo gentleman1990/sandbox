@@ -29,6 +29,10 @@ def get_company_volume(single_company_row):
     return int(single_company_row[6])
 
 
+def get_total_result(single_company_row):
+    return float(single_company_row[4])
+
+
 def get_reverse_list(single_list_company):
     reversed_list = []
     iterator = reversed(single_list_company)
