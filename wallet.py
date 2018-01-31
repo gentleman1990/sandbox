@@ -8,7 +8,7 @@ from logger import log_error_to_file
 
 WALLET_HEADER = "Company Name, Counts, Purchase price, Datetime, Stop Loss, Take profit"
 STATISTICS_HEADER = "Date, Current wallet value, Total results\r\n"
-WALLET_HISTORY_HEADER = "Company Name, Counts, Sold price, Datetime, Result"
+WALLET_HISTORY_HEADER = "Company Name, Counts, Sold price, Purchase date, Sold date, Result"
 STARTING_FUNDS = 15000
 
 

@@ -66,7 +66,7 @@ def sell(wallet_name, wallet, source_data):
             print "Shares for company %s sold in value %s" % (
             company_name, str(get_number_of_shares_for_company_in_wallet(single_company)))
 
-            save_wallet_history(wallet_name, fetch_single_wallet_list_row_for_selling(single_company, source_data))
+            save_wallet_history(wallet_name, fetch_single_wallet_list_row_for_selling(wallet, single_company, source_data))
             update_free_funds(wallet_name, round(number_of_shares * close_price, 2))
         else:
             wallet_after_selling.append(single_company)
@@ -112,15 +112,16 @@ def fetch_all_typed_company_for_simulator(algorithm_name):
     return typed_companies
 
 
-def fetch_single_wallet_list_row_for_selling(single_company, source_data):
+def fetch_single_wallet_list_row_for_selling(wallet, single_company, source_data):
     wallet_history_list_row = []
     company_name = get_company_name(single_company)
     close_price = get_last_close_price(company_name, source_data)
     purchase_price = get_purchase_price_for_company_in_wallet(single_company)
     number_of_shares = get_number_of_shares_for_company_in_wallet(single_company)
     result = round(float(close_price - purchase_price) * number_of_shares, 2)
-    date = get_last_date(company_name, source_data)
+    purchase_date = get_last_purchase_price(company_name, wallet)
+    sold_date = get_last_date(company_name, source_data)
 
-    wallet_history_list_row.append([company_name, number_of_shares, close_price, date, result])
+    wallet_history_list_row.append([company_name, number_of_shares, close_price, purchase_date, sold_date, result])
 
     return wallet_history_list_row
