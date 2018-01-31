@@ -92,8 +92,9 @@ def save_typed_companies(companies_list, algorithm_name):
 
 
 def save_typed_companies_for_simulator(companies_list, algorithm_name):
-    with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt", "r+") as typing_file:
+    with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt", "w") as typing_file:
         typing_file.truncate()
+        typing_file.close()
     for sc in companies_list:
         print "Typed company: " + str(sc)
         with open(FULL_PATH_TO_TYPING + "simulator_" + algorithm_name + ".txt", "a") as typing_file:

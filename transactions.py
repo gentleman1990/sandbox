@@ -30,7 +30,8 @@ def buy(wallet_name, source_data, typed_companies_list, wallet):
         counts = int(floor(STARTING_FUNDS / MAX_COMPANIES_IN_WALLET / close_price))
         stop_loss = round(float(close_price) * (float(100 - PERCENTAGE_STOP_LOSS) / 100), 2)
         take_profit = round(float(close_price) * (float(100 + PERCENTAGE_TAKE_PROFIT) / 100), 2)
-        date = str(datetime.date.today())
+        date = get_last_date(typed_company_name, source_data)
+
         wallet.append([typed_company_name, counts, close_price, date, stop_loss, take_profit])
         update_free_funds(wallet_name, -(counts*close_price))
         print "Shares for company %s bought in value %s with SL %s and TP %s" % (
@@ -81,7 +82,7 @@ def fetch_starting_index(cleared_typed_companies_list, wallet):
 
 def remove_companies_already_in_wallet(wallet, typed_companies_list):
     for sc in wallet:
-        if sc[0] in typed_companies_list:
+        while sc[0] in typed_companies_list:
             typed_companies_list.remove(sc[0])
     return typed_companies_list
 
@@ -118,7 +119,8 @@ def fetch_single_wallet_list_row_for_selling(single_company, source_data):
     purchase_price = get_purchase_price_for_company_in_wallet(single_company)
     number_of_shares = get_number_of_shares_for_company_in_wallet(single_company)
     result = round(float(close_price - purchase_price) * number_of_shares, 2)
-    date = str(datetime.date.today())
+    date = get_last_date(company_name, source_data)
+
     wallet_history_list_row.append([company_name, number_of_shares, close_price, date, result])
 
     return wallet_history_list_row

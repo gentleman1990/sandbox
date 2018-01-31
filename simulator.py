@@ -4,16 +4,17 @@ import traceback
 from transactions import *
 from file_operations import *
 from parsing_and_preparing_data import oscillators
+from statistics import  prepare_statistics
 
 
 def simulate_in_the_past(number_of_days):
     for index in range(number_of_days, 0, -1):
-        company_data = parse_stock_exchange_data()
+        source_data = parse_stock_exchange_data()
         excluded_companies = 0
         companies_to_analysis = []
-        data_in_the_past = company_data[0][-index-1][1]
+        data_in_the_past = source_data[0][-index-1][1]
         print "Analysis for date " + data_in_the_past
-        for single_company in company_data:
+        for single_company in source_data:
             try:
                 del single_company[-index:-1]
                 del single_company[-1]
@@ -29,12 +30,16 @@ def simulate_in_the_past(number_of_days):
         print "Excluded companies: " + str(excluded_companies)
         tbo = oscillators(companies_to_analysis)
         save_typed_companies_for_simulator(tbo, "sma30_ema15")
-        #buy_and_sell(companies_to_analysis)
+        all_typed_companies = fetch_all_typed_company_for_simulator("sma30_ema15")
+
+        analyze_for_buying("simulator", all_typed_companies, companies_to_analysis)
+        analyze_for_selling("simulator", companies_to_analysis)
+        prepare_statistics("simulator", companies_to_analysis)
 
 
 if __name__ == '__main__':
     try:
-        create_new_wallet("simulator", 10000)
+        create_new_wallet("simulator")
         simulate_in_the_past(100)
 
 

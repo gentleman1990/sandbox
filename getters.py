@@ -80,6 +80,12 @@ def get_last_close_price(company_name, source_data):
             return get_last_company_close_price(single_company)
 
 
+def get_last_date(company_name, source_data):
+    for single_company in source_data:
+        if company_name == get_last_company_name(single_company):
+            return get_last_company_date(single_company)
+
+
 def get_purchase_price_for_company_in_wallet(single_company):
     return float(single_company[2])
 
