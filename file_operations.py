@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-import urllib
 import shutil
 import os
 import zipfile
 import time
 import datetime
+import requests
 from getters import get_last_company_name
 
 URL_FOR_STOCK_QUOTES = "http://bossa.pl/pub/ciagle/omega/"
@@ -18,10 +18,9 @@ FULL_PATH_TO_WALLETS = os.path.dirname(os.path.realpath(__file__)) + "/wallets/"
 
 def fetch_last_data_file():
     print "Fetching data ..."
-    url_opener = urllib.URLopener()
-    url_opener.retrieve(URL_FOR_STOCK_QUOTES + ZIP_FILE_NAME, ZIP_FILE_NAME)
+    r = requests.get(URL_FOR_STOCK_QUOTES + ZIP_FILE_NAME, allow_redirects=True)
+    open(ZIP_FILE_NAME, 'wb').write(r.content)
     print "Fetch completed"
-
 
 def unzip():
     print "Unzipping files ..."
